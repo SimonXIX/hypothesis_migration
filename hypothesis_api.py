@@ -13,14 +13,6 @@ import json
 import re
 from config import *
 
-# VARIABLES
-
-username=hypothesis_username
-token=hypothesis_token
-input_file=annotations_file
-old_url=old_url
-new_url=new_url
-
 # SUBROUTINES
 
 # function to perform text replacements in data
@@ -34,7 +26,7 @@ def data_replacements(data):
 # function to set payload
 def set_payload(data):
 
-    h = hypothesis.Hypothesis(username=username, token=token)  # your h username and api token (from https://hypothes.is/account/developer)
+    h = hypothesis.Hypothesis(username=hypothesis_username, token=hypothesis_token)  # your h username and api token (from https://hypothes.is/account/developer)
 
     url = data['url']
     exact = data['exact']
@@ -79,7 +71,7 @@ def write_annotations(payload):
 
 # MAIN PROGRAM
 
-with open(input_file) as json_file:
+with open(annotations_file) as json_file:
     data = json.load(json_file)
     a = 0
     for x in data[0]:
