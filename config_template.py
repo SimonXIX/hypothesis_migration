@@ -8,3 +8,5 @@
 
 hypothesis_username=''
 hypothesis_token=''
+
+annotations_file=''

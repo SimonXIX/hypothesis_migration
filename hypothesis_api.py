@@ -17,8 +17,7 @@ from config import *
 
 username=hypothesis_username
 token=hypothesis_token
-
-input_file='/Users/ad7588/projects/disruptivemedia.org.uk/annotations_20240122.json'
+input_file=annotations_file
 
 # SUBROUTINES
 
