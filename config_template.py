@@ -10,3 +10,6 @@ hypothesis_username=''
 hypothesis_token=''
 
 annotations_file=''
+
+old_url=''
+new_url=''

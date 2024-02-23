@@ -18,12 +18,14 @@ from config import *
 username=hypothesis_username
 token=hypothesis_token
 input_file=annotations_file
+old_url=old_url
+new_url=new_url
 
 # SUBROUTINES
 
 # function to perform text replacements in data
 def data_replacements(data):
-    data['url'] = re.sub('http:\/\/disruptivemedia\.org\.uk\/thepoliticalnatureofthebook\/', 'https://thepoliticalnatureofthebook.postdigitalcultures.org/', data['url'])
+    data['url'] = re.sub(old_url, new_url, data['url'])
     
     if data['user'] != 'Janneke_Adema':
         data['text'] = 'Comment by ' + data['user'] + ': ' + data['text']
