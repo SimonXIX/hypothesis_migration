@@ -64,7 +64,7 @@ def set_payload(data):
 # function to write annotations to site
 def write_annotations(payload):
 
-    h = hypothesis.Hypothesis(username=username, token=token)  # your h username and api token (from https://hypothes.is/account/developer)
+    h = hypothesis.Hypothesis(username=hypothesis_username, token=hypothesis_token)  # your h username and api token (from https://hypothes.is/account/developer)
 
     r = h.post_annotation(payload)
     print(r.status_code)
@@ -78,6 +78,6 @@ with open(annotations_file) as json_file:
         if a >= 2: break
         x = data_replacements(x)
         payload = set_payload(x)
-        #write_annotations(payload)
-        print(payload)
+        write_annotations(payload)
+        #print(payload)
         a += 1
