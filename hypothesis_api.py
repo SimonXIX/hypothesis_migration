@@ -75,9 +75,9 @@ with open(annotations_file) as json_file:
     data = json.load(json_file)
     a = 0
     for x in data[0]:
-        if a >= 2: break
+        #if a >= 2: break
         x = data_replacements(x)
         payload = set_payload(x)
         write_annotations(payload)
         #print(payload)
-        a += 1
+        #a += 1
