@@ -15,10 +15,13 @@ from config import *
 
 # SUBROUTINES
 
-# function to perform text replacements in data
-def data_replacements(data):
+# function to perform URL replacement
+def replace_url(data):
     data['url'] = re.sub(old_url, new_url, data['url'])
-    
+    return data
+
+# function to add the original user's name in the body of the annotation
+def add_user(data):
     if data['user'] != 'Janneke_Adema':
         data['text'] = 'Comment by ' + data['user'] + ': ' + data['text']
     return data
@@ -76,7 +79,9 @@ with open(annotations_file) as json_file:
     a = 0
     for x in data[0]:
         #if a >= 2: break
-        x = data_replacements(x)
+        x = replace_url(x)
+        # subroutine to add the original user's name in the body of the annotation
+        #x = add_user(x)
         payload = set_payload(x)
         write_annotations(payload)
         #print(payload)
