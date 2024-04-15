@@ -12,12 +12,27 @@ import requests
 import json
 import re
 from config import *
+import sys
 
 # SUBROUTINES
+
+# function to fetch help text
+def get_help():
+    f = open('help.md', 'r')
+    help_text = f.read()
+    print(help_text)
+
+# function to fetch license text
+def get_license():
+    f = open('LICENSE', 'r')
+    license_text = f.read()
+    print(license_text)
 
 # function to perform URL replacement
 def replace_url(data):
     data['url'] = re.sub(old_url, new_url, data['url'])
+    if "index1.html" in data['url']:
+        data['url'] = new_url
     return data
 
 # function to add the original user's name in the body of the annotation
@@ -38,6 +53,7 @@ def set_payload(data):
     title = data['title']
     tags = data['tags']
     text = data['text']
+    refs = data['refs']
 
     payload = {
         "uri": url,
@@ -59,7 +75,8 @@ def set_payload(data):
             "title": [title]
         },
         "permissions": h.permissions,
-        "group": h.group
+        "group": h.group,
+        "references": refs
     }
 
     return payload
@@ -72,17 +89,31 @@ def write_annotations(payload):
     r = h.post_annotation(payload)
     print(r.status_code)
 
+# function to import annotations to site
+def import_annotations():
+    with open(annotations_file) as json_file:
+            data = json.load(json_file)
+            a = 0
+            for x in data[0]:
+                #if a >= 1: break
+                x = replace_url(x)
+                # subroutine to add the original user's name in the body of the annotation
+                x = add_user(x)
+                payload = set_payload(x)
+                #write_annotations(payload)
+                print(payload)
+                #a += 1
+
 # MAIN PROGRAM
 
-with open(annotations_file) as json_file:
-    data = json.load(json_file)
-    a = 0
-    for x in data[0]:
-        #if a >= 2: break
-        x = replace_url(x)
-        # subroutine to add the original user's name in the body of the annotation
-        #x = add_user(x)
-        payload = set_payload(x)
-        write_annotations(payload)
-        #print(payload)
-        #a += 1
+if len(sys.argv) == 1:
+    get_help()
+else:
+    if sys.argv[1] == 'help':
+        get_help()
+    elif sys.argv[1] == 'license':
+        get_license()
+    elif sys.argv[1] == 'import':
+        import_annotations()
+    else:
+        get_help()
