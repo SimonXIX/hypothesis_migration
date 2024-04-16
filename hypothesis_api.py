@@ -6,6 +6,7 @@
 # @acknowledgements:
 # https://h.readthedocs.io/en/latest/api/
 # https://pypi.org/project/hypothesis-api/
+# https://github.com/hypothesis/batch-tools/blob/main/batch_tools/bulk_delete.py
 
 import hypothesis
 import requests
@@ -89,20 +90,48 @@ def write_annotations(payload):
     r = h.post_annotation(payload)
     print(r.status_code)
 
-# function to import annotations to site
+# function to import annotations (not replies) to site
 def import_annotations():
     with open(annotations_file) as json_file:
             data = json.load(json_file)
             a = 0
             for x in data[0]:
-                #if a >= 1: break
-                x = replace_url(x)
-                # subroutine to add the original user's name in the body of the annotation
-                x = add_user(x)
-                payload = set_payload(x)
-                #write_annotations(payload)
-                print(payload)
-                #a += 1
+                if not x['refs']:
+                    #if a >= 1: break
+                    x = replace_url(x)
+                    # subroutine to add the original user's name in the body of the annotation
+                    x = add_user(x)
+                    payload = set_payload(x)
+                    write_annotations(payload)
+                    #print(payload)
+                    #a += 1
+
+# function to delete annotations from new_url site
+def delete_annotations():
+    h = hypothesis.Hypothesis(username=hypothesis_username, token=hypothesis_token)  # your h username and api token (from https://hypothes.is/account/developer)
+
+    search_parameters = {
+        "wildcard_uri": new_url + '*',
+        "limit": '200'
+    }
+
+    search_results = h.search(params=search_parameters)
+
+    if search_results['total'] == 0:
+        print("no annotations found")
+        sys.exit(0)
+
+    else: 
+        print(f"found {search_results['total']} matching annotations. are you sure you want to delete these? type 'yes' or 'no'.")
+        ok = input()
+
+        if ok.lower() not in ["y", "yes", "1", "true"]:
+            print("deletion cancelled")
+            sys.exit(0)
+
+        else:
+            for x in search_results['rows']:
+                h.delete_annotation(x['id'])
 
 # MAIN PROGRAM
 
@@ -115,5 +144,7 @@ else:
         get_license()
     elif sys.argv[1] == 'import':
         import_annotations()
+    elif sys.argv[1] == 'delete':
+        delete_annotations()
     else:
         get_help()
