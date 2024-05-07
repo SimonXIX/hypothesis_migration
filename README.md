@@ -26,8 +26,12 @@ Ensure that you have all the required Python modules by running:
 
 `pip install -r requirements.txt`
 
-To run the actual script run:
+The script has several functions:
 
-`python3 ./hypothesis_api.py`
+Syntax: python3 hypothesis_api.py [license|help|import|delete]
 
-
+options:
+license     Print the MIT License notification.
+help        Print this Help.
+import      Run import process.
+delete      Run bulk annotations deletion on new_url website.

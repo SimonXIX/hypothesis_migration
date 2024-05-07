@@ -42,6 +42,13 @@ def add_user(data):
         data['text'] = 'Comment by ' + data['user'] + ': ' + data['text']
     return data
 
+# function to replace ref IDs with new IDs
+def replace_refs(data, ids):
+    for i, item in enumerate(data['refs']):
+        if item in ids:
+            data['refs'][i] = ids[item]
+    return data
+
 # function to set payload
 def set_payload(data):
 
@@ -82,32 +89,63 @@ def set_payload(data):
 
     return payload
 
-# function to write annotations to site
-def write_annotations(payload):
+# function to write annotation to site
+def write_annotation(payload):
 
     h = hypothesis.Hypothesis(username=hypothesis_username, token=hypothesis_token)  # your h username and api token (from https://hypothes.is/account/developer)
 
     r = h.post_annotation(payload)
+
+    response_text = json.loads(r.text)
+
     print(r.status_code)
 
-# function to import annotations (not replies) to site
-def import_annotations():
-    with open(annotations_file) as json_file:
-            data = json.load(json_file)
-            a = 0
-            for x in data[0]:
-                if not x['refs']:
-                    #if a >= 1: break
-                    x = replace_url(x)
-                    # subroutine to add the original user's name in the body of the annotation
-                    x = add_user(x)
-                    payload = set_payload(x)
-                    write_annotations(payload)
-                    #print(payload)
-                    #a += 1
+    return (response_text['id'])
 
+# function to import single annotation
+def import_annotation(annotation):
+
+    annotation = replace_url(annotation)
+    # subroutine to add the original user's name in the body of the annotation
+    annotation = add_user(annotation)
+    payload = set_payload(annotation)
+    new_id = write_annotation(payload)
+
+    return(new_id)
+
+# function to import a single reply annotation to site
+def import_reply(annotation, ids):
+    annotation = replace_url(annotation)
+    # subroutine to add the original user's name in the body of the annotation
+    annotation = add_user(annotation)
+    annotation = replace_refs(annotation, ids)
+    payload = set_payload(annotation)
+    new_id = write_annotation(payload)
+
+    return(new_id)
+
+# function to import annotations to site
+def import_annotations():
+
+    with open(annotations_file) as json_file:
+        data = json.load(json_file)
+        a = 0
+        ids = {}
+        for x in data[0]:
+            # import annotations that aren't replies
+            if not x['refs']:
+                #if a >= 2: break
+                new_id = import_annotation(x)
+                #a += 1
+            # import reply annotations
+            else:
+                new_id = import_reply(x, ids)
+            
+            ids[x['id']] = new_id
+                
 # function to delete annotations from new_url site
 def delete_annotations():
+
     h = hypothesis.Hypothesis(username=hypothesis_username, token=hypothesis_token)  # your h username and api token (from https://hypothes.is/account/developer)
 
     search_parameters = {
