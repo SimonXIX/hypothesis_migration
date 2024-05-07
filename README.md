@@ -26,12 +26,14 @@ Ensure that you have all the required Python modules by running:
 
 `pip install -r requirements.txt`
 
-The script has several functions:
+The script has several functions which can be run by changing the parameter in the command:
 
-Syntax: python3 hypothesis_api.py [license|help|import|delete]
+`python3 hypothesis_api.py [license|help|import|delete]`
 
-options:
-license     Print the MIT License notification.
-help        Print this Help.
-import      Run import process.
-delete      Run bulk annotations deletion on new_url website.
+'license' prints the MIT License.
+
+'help' prints a simple help file (saved here as help.md).
+
+'import' runs the main import process. This will import all the annotations in file pointed too by the annotations_file config variable including top-level annotations and replies underneath those annotations.
+
+'delete' will run a bulk deletion process on all annotations at the new_url config variable website.
