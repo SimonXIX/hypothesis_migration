@@ -2,7 +2,7 @@
 # @creation_date: 2024-02-20
 # @license: The MIT License <https://opensource.org/licenses/MIT>
 # @author: Simon Bowie <ad7588@coventry.ac.uk>
-# @purpose: Writes to the Hypothesis API 
+# @purpose: Performs various functions against the Hypothesis API 
 # @acknowledgements:
 # https://h.readthedocs.io/en/latest/api/
 # https://pypi.org/project/hypothesis-api/
@@ -118,6 +118,7 @@ def import_reply(annotation, ids):
     annotation = replace_url(annotation)
     # subroutine to add the original user's name in the body of the annotation
     annotation = add_user(annotation)
+    # subroutine to replace the ref IDs from the original file with the newly imported annotation IDs
     annotation = replace_refs(annotation, ids)
     payload = set_payload(annotation)
     new_id = write_annotation(payload)
@@ -132,12 +133,12 @@ def import_annotations():
         a = 0
         ids = {}
         for x in data[0]:
-            # import annotations that aren't replies
+            # import annotations that aren't replies i.e. that do not have 'refs' to other annotations
             if not x['refs']:
                 #if a >= 2: break
                 new_id = import_annotation(x)
                 #a += 1
-            # import reply annotations
+            # import annotations that are replies i.e. that do have 'refs' to other annotations
             else:
                 new_id = import_reply(x, ids)
             
