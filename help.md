@@ -1,6 +1,6 @@
 This script runs various Hypothes.is API functions around migration
 
-Syntax: python3 hypothesis_api.py [license|help|import|delete]
+Syntax: python3 hypothesis_api.py [license|help|import|export|delete]
 
 options:
 license     Print the MIT License notification.

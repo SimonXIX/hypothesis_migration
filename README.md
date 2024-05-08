@@ -28,7 +28,7 @@ Ensure that you have all the required Python modules by running:
 
 The script has several functions which can be run by changing the parameter in the command:
 
-`python3 hypothesis_api.py [license|help|import|delete]`
+`python3 hypothesis_api.py [license|help|import|export|delete]`
 
 'license' prints the MIT License.
 
