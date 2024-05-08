@@ -36,4 +36,6 @@ The script has several functions which can be run by changing the parameter in t
 
 'import' runs the main import process. This will import all the annotations in file pointed too by the annotations_file config variable including top-level annotations and replies underneath those annotations.
 
+'export' runs an export of all annotations from old_url to a file called data.json.
+
 'delete' will run a bulk deletion process on all annotations at the new_url config variable website.

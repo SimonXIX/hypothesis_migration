@@ -11,6 +11,7 @@
 import hypothesis
 import requests
 import json
+import pprint
 import re
 from config import *
 import sys
@@ -144,6 +145,26 @@ def import_annotations():
             
             ids[x['id']] = new_id
                 
+# function to export annotations from old_url site
+def export_annotations():
+
+    h = hypothesis.Hypothesis(username=hypothesis_username, token=hypothesis_token)  # your h username and api token (from https://hypothes.is/account/developer)
+
+    search_parameters = {
+        "wildcard_uri": old_url + '*',
+        "limit": '200'
+    }
+
+    search_results = h.search(params=search_parameters)
+
+    if search_results['total'] == 0:
+        print("no annotations found")
+        sys.exit(0)
+
+    else: 
+        with open('data.json', 'w') as f:
+            json.dump(search_results['rows'], f, indent=2)
+
 # function to delete annotations from new_url site
 def delete_annotations():
 
@@ -183,6 +204,8 @@ else:
         get_license()
     elif sys.argv[1] == 'import':
         import_annotations()
+    elif sys.argv[1] == 'export':
+        export_annotations()
     elif sys.argv[1] == 'delete':
         delete_annotations()
     else:
