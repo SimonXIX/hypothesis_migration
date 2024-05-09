@@ -43,6 +43,11 @@ def add_user(data):
         data['text'] = 'Comment by ' + data['user'] + ': ' + data['text']
     return data
 
+# function to process user string
+def process_user(data):
+    data['user'] = data['user'][5:][:-12]
+    return data
+
 # function to replace ref IDs with new IDs
 def replace_refs(data, ids):
     for i, item in enumerate(data['refs']):
@@ -163,6 +168,8 @@ def export_annotations():
 
     else: 
         with open('data.json', 'w') as f:
+            for record in search_results['rows']:
+                process_user(record)
             json.dump(search_results['rows'], f, indent=2)
 
 # function to delete annotations from new_url site
