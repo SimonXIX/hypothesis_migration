@@ -137,7 +137,9 @@ def import_annotations():
     with open(annotations_file) as json_file:
         data = json.load(json_file)
         # sort by date created
-        data[0].sort(key=lambda x : x['created'])
+        data[0].sort(key=lambda x: x['created'])
+        # sort by start point (if there is one)
+        data[0].sort(key=lambda x: x.get('start', float('inf')))
         a = 0
         ids = {}
         for x in data[0]:
