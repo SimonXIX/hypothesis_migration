@@ -43,7 +43,7 @@ def add_user(data):
         data['text'] = 'Comment by ' + data['user'] + ': ' + data['text']
     return data
 
-# function to process user string
+# function to process user string to remove extraneous text
 def process_user(data):
     data['user'] = data['user'][5:][:-12]
     return data
@@ -136,6 +136,8 @@ def import_annotations():
 
     with open(annotations_file) as json_file:
         data = json.load(json_file)
+        # sort by date created
+        data[0].sort(key=lambda x : x['created'])
         a = 0
         ids = {}
         for x in data[0]:
