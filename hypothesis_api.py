@@ -32,10 +32,13 @@ def get_license():
 
 # function to perform URL replacement
 def replace_url(data):
-    data['url'] = re.sub(old_url, new_url, data['url'])
-    if "index1.html" in data['url']:
-        data['url'] = new_url
-    return data
+    data['url'], count = re.subn(old_url, new_url, data['url'])
+    if count == 0:
+        raise ValueError("No match found for old_url")
+    else:
+        if "index1.html" in data['url']:
+            data['url'] = new_url
+        return data
 
 # function to add the original user's name in the body of the annotation
 def add_user(data):
@@ -143,16 +146,16 @@ def import_annotations():
         a = 0
         ids = {}
         for x in data[0]:
+            #if a >= 2: break
             # import annotations that aren't replies i.e. that do not have 'refs' to other annotations
             if not x['refs']:
-                #if a >= 2: break
                 new_id = import_annotation(x)
-                #a += 1
             # import annotations that are replies i.e. that do have 'refs' to other annotations
             else:
                 new_id = import_reply(x, ids)
             
             ids[x['id']] = new_id
+            #a += 1
                 
 # function to export annotations from old_url site
 def export_annotations():
