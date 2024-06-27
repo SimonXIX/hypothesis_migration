@@ -42,7 +42,7 @@ def replace_url(data):
 
 # function to add the original user's name in the body of the annotation
 def add_user(data):
-    if data['user'] != 'Janneke_Adema':
+    if data['user'] != hypothesis_username:
         data['text'] = 'Comment by ' + data['user'] + ': ' + data['text']
     return data
 
@@ -118,9 +118,10 @@ def import_annotation(annotation):
     # subroutine to add the original user's name in the body of the annotation
     annotation = add_user(annotation)
     payload = set_payload(annotation)
-    new_id = write_annotation(payload)
+    #new_id = write_annotation(payload)
+    print(payload)
 
-    return(new_id)
+    #return(new_id)
 
 # function to import a single reply annotation to site
 def import_reply(annotation, ids):
@@ -130,9 +131,9 @@ def import_reply(annotation, ids):
     # subroutine to replace the ref IDs from the original file with the newly imported annotation IDs
     annotation = replace_refs(annotation, ids)
     payload = set_payload(annotation)
-    new_id = write_annotation(payload)
+    #new_id = write_annotation(payload)
 
-    return(new_id)
+    #return(new_id)
 
 # function to import annotations to site
 def import_annotations():
@@ -146,7 +147,7 @@ def import_annotations():
         a = 0
         ids = {}
         for x in data[0]:
-            #if a >= 2: break
+            if a >= 2: break
             # import annotations that aren't replies i.e. that do not have 'refs' to other annotations
             if not x['refs']:
                 new_id = import_annotation(x)
@@ -155,7 +156,7 @@ def import_annotations():
                 new_id = import_reply(x, ids)
             
             ids[x['id']] = new_id
-            #a += 1
+            a += 1
                 
 # function to export annotations from old_url site
 def export_annotations():
